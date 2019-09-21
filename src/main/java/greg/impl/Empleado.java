@@ -1,14 +1,15 @@
-package greg;
+package greg.impl;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import greg.Dispatcher;
+
 /**
- * Empleado del CallCenter que atiende llamadas.
+ * Empleado del call center que atiende llamadas.
  * 
  * @author greg
- *
  */
-public abstract class Empleado {
+public class Empleado implements Dispatcher {
 
 	/**
 	 * Solo puede atender una llamada a la vez.
@@ -16,9 +17,11 @@ public abstract class Empleado {
 	 * 
 	 * @throws InterruptedException
 	 */
-	public synchronized void atenderLlamada() throws InterruptedException {
+	@Override
+	public synchronized boolean dispatchCall() throws InterruptedException {
 		int randomNum = ThreadLocalRandom.current().nextInt(5, 10 + 1);
 		Thread.sleep(randomNum*1000);
+		return true;
 	}
 
 }

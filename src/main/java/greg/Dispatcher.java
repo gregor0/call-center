@@ -1,15 +1,17 @@
 package greg;
 
 /**
- * Maneja las llamadas del call center.
+ * Elemento del call center capaz de atender o derivar llamadas.
  * 
+ * @author greg
  */
 public interface Dispatcher {
 
     /**
-     * Asigna las llamdas a los empleados disponibles.
+     * Atiende o deriva una llamada.
      * 
+	 * @return {@code true} la llamada fue atendida, {@code false} la llamada no fue atendida 
      */
-	public void dispatchCall() throws InterruptedException;
+	public boolean dispatchCall() throws InterruptedException;
 
 }
