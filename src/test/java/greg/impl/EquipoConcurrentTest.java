@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import greg.Dispatcher;
+import greg.DispatcherFactory;
 
 /**
  * Caso:
@@ -21,8 +22,9 @@ import greg.Dispatcher;
 public class EquipoConcurrentTest {
 	
 	@BeforeClass	
-	public void before() {
-		equipo = new Equipo(CallCenterUtil.NewEmpleados(2));		
+	public void before() {		
+		DispatcherFactory factory = new DispatcherFactoryImp();
+		equipo = new Equipo(factory.newMiembros(2));		
 		sinAtender.set(0);
 	}
 	

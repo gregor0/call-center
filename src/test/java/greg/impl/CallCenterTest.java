@@ -7,20 +7,24 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 import greg.Dispatcher;
+import greg.DispatcherFactory;
 
 
 public class CallCenterTest {
 
 	public void testDispatchCall_SinEmpleadosDisponibles() throws InterruptedException {
 
-		Dispatcher callCenter = new CallCenter(0,0,0);
+		Dispatcher callCenter = new CallCenter();
 		assertFalse(callCenter.dispatchCall());
 	}
 
 	@Test
 	public void testDispatchCall() throws InterruptedException {
 
-		Dispatcher callCenter = new CallCenter(0,1,0);
+		DispatcherFactory factory = new DispatcherFactoryImp();
+		SimpleCallCenterBuilder builder = new SimpleCallCenterBuilder(0, 1, 0, factory);
+		Dispatcher callCenter = builder.build();
+
 		assertTrue(callCenter.dispatchCall());
 	}
 
@@ -31,17 +35,15 @@ public class CallCenterTest {
 	@Test
 	public void testDispatchCall_ProcesoAtencionOperador() throws InterruptedException {
 
-		DispatcherContadorDeLlamadas operadores = new DispatcherContadorDeLlamadas(true);
-		DispatcherContadorDeLlamadas supervisores = new DispatcherContadorDeLlamadas(true);
-		DispatcherContadorDeLlamadas directores = new DispatcherContadorDeLlamadas(true);
-
-		Dispatcher callCenter = new CallCenter(operadores,supervisores,directores);
+		CallCenterContadorDeLlamadasBuilder builder = new CallCenterContadorDeLlamadasBuilder(true, true, true);
+		
+		Dispatcher callCenter = builder.build();
 
 		callCenter.dispatchCall();
 
-		assertEquals(operadores.getLlamadas(), 1);
-		assertEquals(supervisores.getLlamadas(), 0);
-		assertEquals(directores.getLlamadas(), 0);
+		assertEquals(builder.getEquipoOperadores().getLlamadas(), 1);
+		assertEquals(builder.getEquipoSupervisores().getLlamadas(), 0);
+		assertEquals(builder.getEquipoDirectores().getLlamadas(), 0);
 	}
 
 	/**
@@ -51,17 +53,16 @@ public class CallCenterTest {
 	@Test
 	public void testDispatchCall_ProcesoAtencionSupervisor() throws InterruptedException {
 
-		DispatcherContadorDeLlamadas operadores = new DispatcherContadorDeLlamadas(false);
-		DispatcherContadorDeLlamadas supervisores = new DispatcherContadorDeLlamadas(true);
-		DispatcherContadorDeLlamadas directores = new DispatcherContadorDeLlamadas(true);
-
-		Dispatcher callCenter = new CallCenter(operadores,supervisores,directores);
+		CallCenterContadorDeLlamadasBuilder builder = new CallCenterContadorDeLlamadasBuilder(false, true, true);
+		
+		Dispatcher callCenter = builder.build();
 
 		callCenter.dispatchCall();
-		
-		assertEquals(operadores.getLlamadas(), 1);
-		assertEquals(supervisores.getLlamadas(), 1);
-		assertEquals(directores.getLlamadas(), 0);
+
+		assertEquals(builder.getEquipoOperadores().getLlamadas(), 1);
+		assertEquals(builder.getEquipoSupervisores().getLlamadas(), 1);
+		assertEquals(builder.getEquipoDirectores().getLlamadas(), 0);
+
 	}
 
 	/**
@@ -71,17 +72,16 @@ public class CallCenterTest {
 	@Test
 	public void testDispatchCall_ProcesoAtencionDirector() throws InterruptedException {
 
-		DispatcherContadorDeLlamadas operadores = new DispatcherContadorDeLlamadas(false);
-		DispatcherContadorDeLlamadas supervisores = new DispatcherContadorDeLlamadas(false);
-		DispatcherContadorDeLlamadas directores = new DispatcherContadorDeLlamadas(true);
-	
-		Dispatcher callCenter = new CallCenter(operadores,supervisores,directores);
+		CallCenterContadorDeLlamadasBuilder builder = new CallCenterContadorDeLlamadasBuilder(false, false, true);
+		
+		Dispatcher callCenter = builder.build();
 
 		callCenter.dispatchCall();
+
+		assertEquals(builder.getEquipoOperadores().getLlamadas(), 1);
+		assertEquals(builder.getEquipoSupervisores().getLlamadas(), 1);
+		assertEquals(builder.getEquipoDirectores().getLlamadas(), 1);
 		
-		assertEquals(operadores.getLlamadas(), 1);
-		assertEquals(supervisores.getLlamadas(), 1);
-		assertEquals(directores.getLlamadas(), 1);
 	}
 
 }

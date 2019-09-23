@@ -1,5 +1,7 @@
 package greg.impl;
 
+import java.util.Set;
+
 import greg.Dispatcher;
 
 /**
@@ -11,7 +13,7 @@ import greg.Dispatcher;
  * 3° atiende un Director si hay alguno disponible
  * 
  */
-public class CallCenter extends DispatcherCompuesto {
+public class CallCenter extends DispatcherCompuestoImp {
 
 	/**
 	 * 
@@ -23,34 +25,20 @@ public class CallCenter extends DispatcherCompuesto {
 		
 		boolean atendida = false;
 			
-		for (Dispatcher equipo : hijos) {
-			atendida = equipo.dispatchCall();
+		for (Dispatcher hijo : hijos) {
+			atendida = hijo.dispatchCall();
 			if (atendida) break;
 		}
 
 		return atendida;
 	}
 
-	public CallCenter(Dispatcher operadores, Dispatcher supervisores, Dispatcher directores) {
+	public CallCenter() {
 		super();
-		hijos.add(operadores);
-		hijos.add(supervisores);
-		hijos.add(directores);
 	}
 
-	/**
-	 * Inicializa con cantidad determinada de empleados
-	 * 
-	 * @param operadores
-	 * @param supervisores
-	 * @param directores
-	 */
-	public CallCenter(int operadores, int supervisores, int directores) {
-		this(		
-		new Equipo(CallCenterUtil.NewEmpleados(operadores)),
-		new Equipo(CallCenterUtil.NewEmpleados(supervisores)),
-		new Equipo(CallCenterUtil.NewEmpleados(directores))
-		);		
+	public CallCenter(Set<? extends Dispatcher> c) {
+		super(c);
 	}
-	
+
 }

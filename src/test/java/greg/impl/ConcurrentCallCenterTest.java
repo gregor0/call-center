@@ -8,7 +8,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import greg.CallCenterBuilder;
 import greg.Dispatcher;
+import greg.DispatcherFactory;
 
 /**
  * Caso:
@@ -22,13 +24,14 @@ import greg.Dispatcher;
  * Para que todas las llamadas sean atendidas la capacidad de llamadas concurrentes del
  * call center debe ser menor o igual a la cantidad de empleados del call center.
  */
-public class CallCenterConcurrentTest {
+public class ConcurrentCallCenterTest {
 	
 	@BeforeClass//@BeforeMethod @BeforeClass @BeforeTest	
 	public void before() {
-		
-		Dispatcher callCenter = new CallCenter(3, 2, 1);
-		concurrentCallCenter = new ConcurrentDispatcher(callCenter, 10);
+
+		DispatcherFactory factory = new DispatcherFactoryImp();
+		CallCenterBuilder builder = new ConcurrentCallCenterBuilder(3, 2, 1, factory, 10);
+		callCenter = builder.build();
 
 		sinAtender.set(0);
 	}
@@ -36,7 +39,7 @@ public class CallCenterConcurrentTest {
 	@Test(threadPoolSize = 10, invocationCount = 10)//timeOut = 10000
 	public void testDispatchCall() throws InterruptedException {
 		
-		if (!concurrentCallCenter.dispatchCall())
+		if (!callCenter.dispatchCall())
 			sinAtender.addAndGet(1);
 	}
 
@@ -45,7 +48,7 @@ public class CallCenterConcurrentTest {
 		assertEquals(sinAtender.get(), 4);
 	}
 
-	private Dispatcher concurrentCallCenter;
+	private Dispatcher callCenter;
 
 	private final AtomicInteger sinAtender = new AtomicInteger(0);
 }

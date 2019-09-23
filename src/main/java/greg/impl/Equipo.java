@@ -9,7 +9,7 @@ import greg.Dispatcher;
  * 
  * @author greg
  */
-public class Equipo extends DispatcherCompuesto {
+public class Equipo extends DispatcherCompuestoImp {
 
 	/**
 	 * Deriva la llamada a un hijo que esta disponible.
@@ -43,4 +43,5 @@ public class Equipo extends DispatcherCompuesto {
 	public Equipo(Set<? extends Dispatcher> c) {
 		super(c);
 	}
+
 }

@@ -5,25 +5,23 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import greg.Dispatcher;
+import greg.DispatcherCompuesto;
 
-/**
- * Dispatcher que agrupa un conjunto de dispatchers hijos.
- * 
- * @author greg
- */
-public abstract class DispatcherCompuesto implements Dispatcher {
 
-	public DispatcherCompuesto add(Dispatcher hijo) {
+public abstract class DispatcherCompuestoImp implements DispatcherCompuesto {
+
+	@Override
+	public DispatcherCompuestoImp add(Dispatcher hijo) {
 		hijos.add(hijo);
 		return this;
 	}
 	
-	public DispatcherCompuesto(Set<? extends Dispatcher> c) {
+	public DispatcherCompuestoImp(Set<? extends Dispatcher> c) {
 		this();
 		hijos.addAll(c);
 	}
 
-	public DispatcherCompuesto() {
+	public DispatcherCompuestoImp() {
 		super();
 	}
 
