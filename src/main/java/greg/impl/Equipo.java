@@ -26,11 +26,14 @@ public class Equipo extends DispatcherCompuesto {
 		if (hijo==null) 
 			return false; 
 		
-		boolean atendida = hijo.dispatchCall();
+		try {
 		
-		hijos.add(hijo);
+			return hijo.dispatchCall();
 
-		return atendida;		
+		} finally {
+			hijos.add(hijo);
+		}
+		
 	}
 
 	public Equipo() {
